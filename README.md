@@ -14,8 +14,7 @@ The analysis uses:
 
 The compressed CSV and NumPy files are row-aligned: row `i` of the speech dataset corresponds to row `i` of the embedding matrix. The R script reads the `.csv.gz` file directly; manual extraction is not required.
 
-The repository uses reduced 2025 samples. The speech data are gzip-compressed so that both inputs remain below GitHub's 25 MB browser-upload limit and can be stored without Git Large File Storage (Git LFS).
-
+The repository uses only reduced 2025 samples for simple visualization.
 ## Analysis
 
 The R script performs the following steps:
