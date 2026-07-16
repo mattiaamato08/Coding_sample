@@ -42,7 +42,6 @@ The following columns are used when available:
 - `date`
 - `agenda`
 - `party`
-- `political_group`
 - `period`
 - `legislature`
 - `speechnumber`
