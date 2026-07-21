@@ -4,6 +4,8 @@ This repository contains a restricted and reproducible version of a larger NLP p
 
 The original project applies Doc2Vec document embeddings to a corpus covering the 1999–2026 period. This coding sample focuses on speeches delivered in 2025 and reproduces the main post-training stages of the analysis.
 
+The aim is to identify recurring topics in parliamentary debate without assigning predefined labels to the speeches. Speeches that discuss similar issues should have similar Doc2Vec representations; the analysis connects these nearby speeches, groups them into communities and then uses their most distinctive words and representative texts to understand what each group is about.
+
 ## Files
 
 The analysis uses:
@@ -69,23 +71,23 @@ doc2vec_2025_outputs/
 
 ### `01_validation/`
 
-- `nearest_neighbour_cosine_summary.csv` reports the mean, median, standard deviation and selected quantiles of cosine similarity across each speech's 20 nearest neighbours. Higher values indicate that nearby Doc2Vec vectors represent more semantically similar speeches.
-- `nearest_neighbour_cosine_by_speech.csv` reports the mean, median, minimum and maximum neighbour similarity separately for every speech. It can be used to identify speeches located in especially coherent or isolated areas of the embedding space.
-- `local_npmi_summary.csv` summarises lexical coherence for a reproducible sample of up to 2,000 semantic neighbourhoods. For each target speech, the script selects the highest-TF-IDF terms from the target and its nearest neighbours and evaluates their corpus-level co-occurrence using normalized pointwise mutual information (NPMI). Scores range from `-1` to `1`: higher values indicate stronger-than-random co-occurrence and therefore greater lexical coherence.
-- `local_npmi_by_speech.csv` contains the individual NPMI score and document index for each sampled target speech.
+- `nearest_neighbour_cosine_summary.csv` summarises cosine similarity between speeches and their 20 nearest neighbours. Higher values mean that nearby speeches are more similar in meaning.
+- `nearest_neighbour_cosine_by_speech.csv` provides the same diagnostics for each individual speech, making it easier to identify very coherent or relatively isolated observations.
+- `local_npmi_summary.csv` summarises the lexical coherence of up to 2,000 sampled neighbourhoods. NPMI checks whether their most important words tend to occur together; higher scores indicate more coherent content.
+- `local_npmi_by_speech.csv` reports the NPMI score for each sampled speech neighbourhood.
 
 ### `02_clustering/`
 
-- `cluster_assignments.csv` maps every speech to a zero-based Leiden cluster label.
-- `cluster_sizes.csv` reports the number and share of speeches assigned to each cluster.
-- `clustering_summary.csv` records the principal graph and clustering diagnostics, including the number of nodes and edges, embedding dimension, neighbourhood size, Leiden settings, number of clusters and modularity. Modularity measures how strongly the graph is partitioned into internally connected communities, although it should mainly be compared across runs built from the same graph specification.
-- `knn_graph.rds` stores the weighted, undirected cosine k-nearest-neighbour graph as an R object. Nodes represent speeches; edges connect semantic neighbours; edge weights are non-negative cosine similarities.
+- `cluster_assignments.csv` assigns each speech to a Leiden cluster.
+- `cluster_sizes.csv` reports how many speeches belong to each cluster and their share of the sample.
+- `clustering_summary.csv` contains the main settings and diagnostics, including the number of clusters and modularity. Higher modularity generally indicates more clearly separated communities.
+- `knn_graph.rds` stores the semantic-neighbour graph used for clustering: speeches are nodes and similar speeches are connected by weighted edges.
 
 ### `03_interpretation/`
 
-- `cluster_interpretation.csv` reports cluster size, corpus share and the 20 terms with the highest mean TF-IDF weight within each cluster. These terms provide descriptive labels rather than supervised topic assignments.
-- `representative_speeches.csv` reports up to five speeches per cluster that are closest to the cluster's normalized embedding centroid. It includes their centroid cosine similarity, available metadata and readable speech text.
+- `cluster_interpretation.csv` reports cluster size and the 20 most distinctive TF-IDF terms, which help describe the topic represented by each cluster.
+- `representative_speeches.csv` contains up to five speeches closest to each cluster centre, together with their metadata and text. These examples support the qualitative interpretation of the clusters.
 
 ### Consolidated workbook
 
-`doc2vec_2025_analysis_results.xlsx` collects the main validation, clustering and interpretation tables in separate worksheets for convenient inspection. Large intermediate objects, the complete graph and per-speech cluster assignments remain in their corresponding CSV/RDS files. The generated output directory is ignored by Git and is not written back to the repository automatically.
+`doc2vec_2025_analysis_results.xlsx` collects the main validation, clustering and interpretation tables in separate worksheets for convenient inspection. The complete graph and other detailed results remain in their corresponding CSV/RDS files.
