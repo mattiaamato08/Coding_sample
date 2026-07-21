@@ -394,7 +394,7 @@ npmi_target_rows <- sort(sample(
 log_message(
   "Computing local NPMI for ",
   format(npmi_sample_size, big.mark = ","),
-  " sampled neighbourhoods."
+  " sampled neighbourhoods. This passage can take 20 minutes, more or less"
 )
 
 npmi_scores <- vapply(
