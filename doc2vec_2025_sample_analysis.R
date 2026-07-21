@@ -46,7 +46,7 @@ library(writexl)
 # ------------------------------------------------------------
 
 DATA_PATH <- "ep_2025_aligned.csv.gz"
-EMBEDDINGS_PATH <- "ep_2025_embeddings.npy"
+EMBEDDINGS_PATH <- "ep_2025_embeddings_float64.npy"
 
 OUTPUT_DIR <- "doc2vec_2025_outputs"
 VALIDATION_DIR <- file.path(OUTPUT_DIR, "01_validation")
@@ -243,9 +243,8 @@ nearest_neighbours <- hnsw_knn(
   ef_construction = min(HNSW_EF_CONSTRUCTION, nrow(embeddings)),
   ef = min(max(HNSW_EF_SEARCH, k_max), nrow(embeddings)),
   verbose = TRUE,
-  n_threads = 0,
-  byrow = TRUE,
-  random_seed = RANDOM_SEED
+  n_threads = 1,
+  byrow = TRUE
 )
 
 validation_neighbours <- remove_self_neighbours(
